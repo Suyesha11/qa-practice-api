@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>QA Practice API — test bench</title>
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>&#9210;</text></svg>" />
+</head>
+<body>
+
+<header class="bench-head">
+  <div class="head-left">
+    <span class="signal" aria-hidden="true"></span>
+    <h1>QA Practice API</h1>
+    <p class="tagline">A test bench for API testing practice. Fire requests from Postman — watch them land here.</p>
+  </div>
+  <div class="head-right">
+    <div class="readout">
+      <span class="readout-value" id="stat-requests">0</span>
+      <span class="readout-label">requests</span>
+    </div>
+    <div class="readout">
+      <span class="readout-value alarm" id="stat-errors">0</span>
+      <span class="readout-label">4xx / 5xx</span>
+    </div>
+    <button class="reset-btn" id="reset-btn">Reset data</button>
+  </div>
+</header>
+
+<main class="bench">
+
+  <!-- Signature element: the live request feed -->
+  <section class="panel feed-panel">
+    <div class="panel-head">
+      <h2>Live request feed</h2>
+      <span class="pulse" id="pulse">listening</span>
+    </div>
+    <ol class="feed" id="feed">
+      <li class="feed-empty">
+        Nothing yet. Send a request to
+        <code>http://localhost:3000/api/health</code>
+        and it will appear here.
+      </li>
+    </ol>
+  </section>
+
+  <!-- Data inspector -->
+  <section class="panel data-panel">
+    <div class="panel-head">
+      <h2>Stored data</h2>
+      <nav class="tabs" id="tabs">
+        <button class="tab is-active" data-tab="bookings">Bookings</button>
+        <button class="tab" data-tab="users">Users</button>
+        <button class="tab" data-tab="products">Products</button>
+        <button class="tab" data-tab="deliveries">Webhooks</button>
+      </nav>
+    </div>
+    <div class="data-body" id="data-body"></div>
+  </section>
+
+</main>
+
+<section class="reference">
+  <h2>Endpoint reference</h2>
+  <p class="reference-note">
+    Base URL <code>http://localhost:3000/api</code> &middot;
+    Sign in as <code>admin / admin123</code> for admin routes, <code>tester / tester123</code> for a standard user.
+  </p>
+  <div class="ref-grid" id="ref-grid"></div>
+</section>
+
+<footer class="bench-foot">
+  <span>Data lives in memory and resets when the server restarts.</span>
+  <span>Four deliberate flaws are hidden in these endpoints — see the README.</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

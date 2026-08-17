@@ -1,0 +1,856 @@
+{
+  "info": {
+    "_postman_id": "d63cb347-b4d3-48a3-a23f-551104fae269",
+    "name": "MockApi -QA Practice API",
+    "description": "StartFragmentPractice collection for the local QA Practice API.  \nBase URL: [http://localhost:3000/](http://localhost:3000/)  \nSeed accounts: admin/admin123 (admin), tester/tester123 (user), other/other123 (user)EndFragment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "14399514"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Login successsfull\",function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "})\r",
+                  "\r",
+                  "const jsonData=pm.response.json();\r",
+                  "pm.environment.set(\"accessToken\",jsonData.accessToken);\r",
+                  "pm.environment.set(\"refreshToken\",jsonData.refreshToken);\r",
+                  "\r",
+                  "console.log(\"Access token stored:\",jsonData.accessToken.slice(0,20)+\".....\")"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"tester\",\r\n    \"password\": \"tester123\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login As Other",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Login successsfull\",function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "})\r",
+                  "\r",
+                  "const jsonData=pm.response.json();\r",
+                  "pm.environment.set(\"otherToken\",jsonData.accessToken);\r",
+                  "\r",
+                  "console.log(\"Access token stored:\",jsonData.accessToken.slice(0,20)+\".....\")"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"other\",\r\n    \"password\": \"other123\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Basic Auth Check",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "password",
+                  "value": "tester123",
+                  "type": "string"
+                },
+                {
+                  "key": "username",
+                  "value": "tester",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/basic-protected",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "basic-protected"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API Key Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "qap_user_key_7c1d40",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/apikey-protected",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "apikey-protected"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API Key Check Params",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/apikey-protected?api_key=qap_user_key_7c1d40",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "apikey-protected"
+              ],
+              "query": [
+                {
+                  "key": "api_key",
+                  "value": "qap_user_key_7c1d40",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get OAuth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Token issued\",function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "pm.environment.set(\"oauthToken\" , jsonData.access_token);\r",
+                  "console.log(\"Scope granted\" ,jsonData.scope)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n       \"grant_type\": \"client_credentials\",\r\n       \"client_id\": \"qa-practice-client\",\r\n       \"client_secret\": \"s3cr3t-client-value\"\r\n     }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/oauth/token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "oauth",
+                "token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "OAuth Protected Resource",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{oauthToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/oauth/protected",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "oauth",
+                "protected"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Readonly OAuth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\",function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "})\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "pm.environment.set(\"readonlyToken\", jsonData.access_token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n       \"grant_type\": \"client_credentials\",\r\n       \"client_id\": \"readonly-client\",\r\n       \"client_secret\": \"readonly-secret\"\r\n     }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/oauth/token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "oauth",
+                "token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "OAuth Write - Should Fail",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403\",function(){\r",
+                  "    pm.response.to.have.status(403);\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{readonlyToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/oauth/protected-write",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "oauth",
+                "protected-write"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Get OAuth Token Copy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Token issued\",function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "pm.environment.set(\"oauthToken\" , jsonData.access_token);\r",
+                  "console.log(\"Scope granted\" ,jsonData.scope)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n       \"grant_type\": \"client_credentials\",\r\n       \"client_id\": \"qa-practice-client\",\r\n       \"client_secret\": \"s3cr3t-client-value\"\r\n     }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/oauth/token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "oauth",
+                "token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Bookings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\",function(){\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "})\r",
+                  "\r",
+                  "pm.test(\"Response time is under 500ms\", ()=>{\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500)\r",
+                  "})\r",
+                  "\r",
+                  "pm.test(\"Response has data and pagination\",()=>{\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.have.property('data');\r",
+                  "    pm.expect(jsonData).to.have.property('pagination');\r",
+                  "})\r",
+                  "\r",
+                  "pm.test(\"Data is an array\",function(){\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.data).to.be.an('array')\r",
+                  "})\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "//Deep quality-checks every nested field matches exactly , not just \"Has this property\"\r",
+                  "pm.test(\"First booking has correct shape\", function(){\r",
+                  "    pm.expect(jsonData.data[0]).to.have.all.keys(\r",
+                  "        'id',\r",
+                  "        'firstname',\r",
+                  "        'lastname',\r",
+                  "        'totalPrice',\r",
+                  "        'depositPaid',\r",
+                  "        'roomType',\r",
+                  "        'bookingDates',\r",
+                  "        'additionalNeeds',\r",
+                  "        'ownerId',\r",
+                  "        'createdAt'    );\r",
+                  "});\r",
+                  "\r",
+                  "//Array contents - checking an array includes a specific value\r",
+                  "pm.test(\"Room types are all valid\",function(){\r",
+                  "    const validTypes= [ 'single' ,'double' , 'twin' , 'suite'];\r",
+                  "    jsonData.data.forEach(booking=>{\r",
+                  "        pm.expect(validTypes).to.include(booking.roomType);\r",
+                  "    })})\r",
+                  "\r",
+                  "//Regex matching - validating a string follows a pattern\r",
+                  "pm.test(\"Checkin date matches YYYY-MM-DD format\",function(){\r",
+                  "    pm.expect(jsonData.data[0].bookingDates.checkin).to.match(/^\\d{4}-\\d{2}-\\d{2}$/)\r",
+                  "})\r",
+                  "\r",
+                  "//Numeric comparisons beyond simple equality \r",
+                  "pm.test(\"Total price is a sane positive number\",function (){\r",
+                  "    pm.expect(jsonData.data[0].totalPrice).to.be.a('number').and.to.be.above(0);\r",
+                  "})\r",
+                  "\r",
+                  "//Negation - proving something is absent (important for security/exposure checks)\r",
+                  "pm.test(\"Response does not leak internal fields\",function(){\r",
+                  "    pm.expect(jsonData.data[0]).to.not.have.property('password');\r",
+                  "     pm.expect(jsonData.data[0]).to.not.have.property('__v');\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/bookings",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bookings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Booking",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.variables.set(\"firstname\",\"Guest_\"+Date.now());\r",
+                  "\r",
+                  "const tomorrow = new Date();\r",
+                  "tomorrow.setDate(tomorrow.getDate()+1);\r",
+                  "pm.variables.set(\"checkinDate\",tomorrow.toISOString().slice(0,10))\r",
+                  "\r",
+                  "console.log(\"Generated checkin date:\", pm.variables.get(\"checkinDate\"));\r",
+                  "\r",
+                  "const template = \"Booking for {{firstname}} on {{checkinDate}}\";\r",
+                  "const resolved = pm.variables.replaceIn(template);\r",
+                  "console.log(\"Resolved template:\", resolved);\r",
+                  "\r",
+                  "pm.sendRequest({\r",
+                  "    url: pm.variables.replaceIn('{{base_url}}/health'),\r",
+                  "    method: 'GET'\r",
+                  "}, function (err, response) {\r",
+                  "    if (err) {\r",
+                  "        console.error('Health check failed:', err);\r",
+                  "    } else {\r",
+                  "        console.log('Server health before booking creation:', response.json().status);\r",
+                  "    }\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "\r",
+                  "pm.test(\"Booking created\",function(){\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "})\r",
+                  "\r",
+                  "const jsonData = pm.response.json();\r",
+                  "pm.environment.set(\"bookingId\", jsonData.id);\r",
+                  "if (jsonData.totalPrice < 100) {\r",
+                  "    console.log(\"Price under 100 — routing straight to Delete Booking, skipping Get\");\r",
+                  "    pm.execution.setNextRequest(\"Delete Booking\");\r",
+                  "} else {\r",
+                  "    console.log(\"Price is 100+, proceeding normally to Get Booking By ID\");\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "console.log(\"Booking created with ID:\" , jsonData.id)\r",
+                  "\r",
+                  "console.log(\"Raw text body:\",pm.response.text());\r",
+                  "console.log(\"Response size (bytes):\", pm.response.responseSize);\r",
+                  "console.log(\"Content-Type header:\", pm.response.headers.get(\"Content-Type\"));\r",
+                  "console.log(\"Has Etag header:\", pm.response.headers.has(\"Etag\"));\r",
+                  "console.log(\"All headers\", pm.response.headers.all());\r",
+                  "\r",
+                  "const location = pm.response.headers.get(\"Location\");\r",
+                  "console.log(\"Location header:\", location);\r",
+                  "pm.test(\"Location header points to the new booking\", function () {\r",
+                  "    pm.expect(location).to.include(`/bookings/${pm.response.json().id}`);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstname\": \"{{firstname}}\",\r\n    \"lastname\": \"Automation\",\r\n    \"totalPrice\": 180,\r\n    \"depositPaid\": true,\r\n    \"roomType\": \"double\",\r\n    \"bookingDates\": {\r\n      \"checkin\": \"{{checkinDate}}\",\r\n      \"checkout\": \"2026-09-10\"\r\n    }\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/bookings",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bookings"
+              ]
+            },
+            "description": "Creates a new booking.Requires Bearer authentictaion (inherited from collection).\n\nReturns 201 with the created booking and a location header.Return 422 if required fields are missing oe roomtype is not one of the :single,double,twin,suite"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Booking By Id",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstname\": \"{{firstname}}\",\r\n    \"lastname\": \"Automation\",\r\n    \"totalPrice\": 150,\r\n    \"depositPaid\": true,\r\n    \"roomType\": \"double\",\r\n    \"bookingDates\": {\r\n      \"checkin\": \"{{checkinDate}}\",\r\n      \"checkout\": \"2026-09-10\"\r\n    }\r\n  }"
+            },
+            "url": {
+              "raw": "{{base_url}}/bookings/{{bookingId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bookings",
+                "{{bookingId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Booking",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Booking deleted\",function(){\r",
+                  "    pm.response.to.have.status(204);\r",
+                  "})\r",
+                  "\r",
+                  "const price = pm.collectionVariables.get(\"lastBookingPrice\");\r",
+                  "if (price && price < 50) {\r",
+                  "    console.log(\"Skipping delete — price too low, jumping to Login instead\");\r",
+                  "}\r",
+                  "\r",
+                  "pm.collectionVariables.unset(\"bookingId\")"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstname\": \"{{firstname}}\",\r\n    \"lastname\": \"Automation\",\r\n    \"totalPrice\": 150,\r\n    \"depositPaid\": true,\r\n    \"roomType\": \"double\",\r\n    \"bookingDates\": {\r\n      \"checkin\": \"{{checkinDate}}\",\r\n      \"checkout\": \"2026-09-10\"\r\n    }\r\n  }"
+            },
+            "url": {
+              "raw": "{{base_url}}/bookings/{{bookingId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bookings",
+                "{{bookingId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              "console.log(\"Entering Booking Folder resquest\", pm.info.requestName);"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": []
+    },
+    {
+      "name": "Products",
+      "item": []
+    },
+    {
+      "name": "Webhooks",
+      "item": []
+    },
+    {
+      "name": "Utilities",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Echo Dynamic Data",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n       \"id\": \"{{$guid}}\",\r\n       \"email\": \"{{$randomEmail}}\",\r\n       \"createdAt\": \"{{$isoTimestamp}}\",\r\n       \"score\": {{$randomInt}}\r\n     }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/echo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "echo"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Data Variables Test",
+      "item": [
+        {
+          "name": "Echo Data variable",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"{{firstname}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/echo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "echo"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+    
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "console.log('[${pm.info.requestName}] running at', new Date().toISOString());\r",
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "pm.test(\"Response time is reasonable\",function(){\r",
+          "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+          "})"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": ""
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "qa-practice-api",
+  "version": "1.0.0",
+  "description": "A deliberately-designed practice API for QA engineers learning API testing with Postman",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": ["api-testing", "postman", "qa", "practice"],
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

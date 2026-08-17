@@ -1,0 +1,9 @@
+firstname,lastname,totalPrice,depositPaid,roomType,checkin,checkout,expectedStatus
+Aditi,Kulkarni,150,TRUE,double,2026-09-01,2026-09-05,201
+Marcus,Weber,320,FALSE,suite,2026-09-10,2026-09-14,201
+Yuki,Tanaka,95,TRUE,single,2026-09-20,2026-09-22,201
+Priya,,200,TRUE,twin,2026-10-01,2026-10-04,422
+Tomas,Novak,abc,TRUE,double,2026-10-05,2026-10-08,400
+Lena,Fischer,180,TRUE,castle,2026-10-10,2026-10-12,422
+Omar,Haddad,220,TRUE,suite,2026-11-10,2026-11-01,422
+Larry,Chunk,"""bc""",TRUE,single,03-11-2026,23-11-2026,422
